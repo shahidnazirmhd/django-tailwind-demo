@@ -25,7 +25,21 @@ SECRET_KEY = "django-insecure-0=v9p!0pp*k(5_1==cxkfp#79zd!l!a3mmu)ktx^z=71gh3v(l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Allow all subdomains of app.github.dev (Codespaces URLs)
+ALLOWED_HOSTS = [
+    ".app.github.dev",
+]
+
+# Trust the proxy headers for host and scheme (required in Codespaces and some proxies)
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Trusted origins for CSRF protection (Codespaces wildcard + local dev)
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.app.github.dev",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
 
 # Application definition
@@ -67,7 +81,9 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "templates"
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -131,6 +147,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+MEDIA_URL = "media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
